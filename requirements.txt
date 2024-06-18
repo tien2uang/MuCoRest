@@ -1,0 +1,11 @@
+pyyaml
+prance
+openapi-spec-validator
+numpy
+rstr
+matplotlib
+pandas
+hypothesis
+deepdiff
+beautifulsoup4
+requests==2.28.2

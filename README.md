@@ -36,14 +36,14 @@ This command will run the tool and all the services in our benchmark for an hour
 ### Run person-controller service
 After run above command, use this command to enter the active session:
 ```
-tmux attach-session -t arat-rl_person-controller
+tmux attach-session -t mucorest_person-controller
 ```
 You can run this command to check if all 4 sessions are operating concurrently, use this command:
 ```
 tmux ls
 ```
 
-If the "arat-rl_person-controller" session ends abruptly, run this command to prevent duplicate sessions in future runs:
+If the "mucorest_person-controller" session ends abruptly, run this command to prevent duplicate sessions in future runs:
 ```
 tmux kill-server
 ```

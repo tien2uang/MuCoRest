@@ -27,15 +27,17 @@ sudo apt-get install -y docker.io
 ######RESTful Service#####
 export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
 export PATH=$JAVA_HOME/bin:$PATH
-cd ./service/jdk8_1 && mvn clean install -DskipTests && mvn dependency:build-classpath -Dmdep.outputFile=cp.txt
-cd ../jdk8_2/genome-nexus && mvn clean install -DskipTests && mvn dependency:build-classpath -Dmdep.outputFile=cp.txt
-cd ../person-controller && mvn clean install -DskipTests && mvn dependency:build-classpath -Dmdep.outputFile=cp.txt
-cd ../user-management && mvn clean install -DskipTests && mvn dependency:build-classpath -Dmdep.outputFile=cp.txt
-export JAVA_HOME=/usr/lib/jvm/java-1.11.0-openjdk-amd64
-export PATH=$JAVA_HOME/bin:$PATH
-cd ../../jdk11/market && mvn clean install -DskipTests && mvn dependency:build-classpath -Dmdep.outputFile=cp.txt
-cd ../project-tracking-system && mvn clean install -DskipTests && mvn dependency:build-classpath -Dmdep.outputFile=cp.txt
-cd ../../..
+#cd ./service/jdk8_1 && mvn clean install -DskipTests && mvn dependency:build-classpath -Dmdep.outputFile=cp.txt
+#cd ../jdk8_2/genome-nexus && mvn clean install -DskipTests && mvn dependency:build-classpath -Dmdep.outputFile=cp.txt
+#cd ../person-controller && mvn clean install -DskipTests && mvn dependency:build-classpath -Dmdep.outputFile=cp.txt
+#cd ../user-management && mvn clean install -DskipTests && mvn dependency:build-classpath -Dmdep.outputFile=cp.txt
+#export JAVA_HOME=/usr/lib/jvm/java-1.11.0-openjdk-amd64
+#export PATH=$JAVA_HOME/bin:$PATH
+#cd ../../jdk11/market && mvn clean install -DskipTests && mvn dependency:build-classpath -Dmdep.outputFile=cp.txt
+#cd ../project-tracking-system && mvn clean install -DskipTests && mvn dependency:build-classpath -Dmdep.outputFile=cp.txt
+#cd ../../..
+
+cd ./service/jdk8_2/person-controller && mvn clean install -DskipTests && mvn dependency:build-classpath -Dmdep.outputFile=cp.txt
 
 sudo docker pull genomenexus/gn-mongo
 sudo docker pull mongo

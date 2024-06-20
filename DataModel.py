@@ -1,6 +1,6 @@
 import json
 import numbers
-
+import requests
 
 def is_response_content_similar(api_call_1, api_call_2) -> bool:
 
@@ -89,8 +89,11 @@ def is_response_content_similar(api_call_1, api_call_2) -> bool:
 
                             if deep_diff(response1.json(), response2.json()):
                                 is_equal = False
-            except json.JSONDecodeError as e:
+            except requests.exceptions.JSONDecodeError as e:
                 print("Invalid JSON response:", e)
+                with open('response_fail.txt', 'w') as f:
+                    f.write(response1.text+"\n")
+                    f.write(response2.text+"\n")
         elif api_call_1.response_type == ReponseType.OTHER_RESPONSE_TYPE:
 
             response1 = api_call_1.response

@@ -495,11 +495,11 @@ def update_q_table(q_table, alpha, gamma, selected_operation, selected_parameter
 
     # line_cov = calculateCoverage()
     if doesCoverageIncrease():
-        if request_index>1000:
+        if request_index > 1000:
 
-            code_coverage_reward = R_fg*2
+            code_coverage_reward = R_fg * 2
         else:
-            code_coverage_reward= R_fg
+            code_coverage_reward = R_fg
     reward = code_coverage_reward + bug_objective_reward + output_coverage_reward
 
     # line_cov_list.append(line_cov)
@@ -835,7 +835,7 @@ def calculateCoverage() -> float:
     current_coverage["method_coverage"] = coverage["method_coverage"]
 
     # subprocess.run("rm -f " + csv_file, shell=True)
-    subprocess.run("rm -f " + exec_file, shell=True)
+    # subprocess.run("rm -f " + exec_file, shell=True)
 
     return coverage["line_coverage"]
 
@@ -875,7 +875,7 @@ def init_recent_lists(operations):
 
 def doesCoverageIncrease() -> bool:
     does_increase = False
-    print("COV port :" + cov_port)
+    print("COV port :" + str(cov_port))
     exec_file = "jacoco_" + str(cov_port) + "_1.exec"
     subprocess.run("java -jar org.jacoco.cli-0.8.7-nodeps.jar dump --address localhost --port " + str(
         cov_port) + " --destfile " + exec_file, shell=True)
@@ -970,7 +970,8 @@ def main():
             except Exception:
                 pass
         update_q_table(q_table, alpha, gamma, selected_operation, selected_parameters, response,
-                       recently_api_call=recently_api_call, recently_stack_trace_list=recently_stack_trace_list,request_index=request_index)
+                       recently_api_call=recently_api_call, recently_stack_trace_list=recently_stack_trace_list,
+                       request_index=request_index)
         if response.status_code < 300:
             copied_operation = copy.deepcopy(selected_operation)
             copied_parameters = copy.deepcopy(selected_parameters)
@@ -986,11 +987,12 @@ def main():
 if __name__ == "__main__":
     base_url = "http://localhost:30111"
     request_index=0
-    # base_url = sys.argv[2]
+    base_url = sys.argv[2]
 
     try:
 
         cov_port = sys.argv[3]
+        print(cov_port)
 
     except IndexError:
         print("cov_port does not exist")
@@ -998,6 +1000,7 @@ if __name__ == "__main__":
 
     try:
         service = sys.argv[4]
+        print(service)
 
     except IndexError:
 
@@ -1006,10 +1009,10 @@ if __name__ == "__main__":
     with open("parameters.json", 'r') as file:
         parameter_dic = json.load(file)
 
-    execute_hour= parameter_dic["execute_hour"]
+    execute_hour = parameter_dic["execute_hour"]
 
     previous_stack_trace_list_size = parameter_dic["previous_stack_trace_list_size"]
-    previous_api_call_list_size  =parameter_dic["previous_api_call_list_size"]
+    previous_api_call_list_size = parameter_dic["previous_api_call_list_size"]
     max_epsilon = parameter_dic["epsilon"]
     max_request_update_epsilon = parameter_dic["max_request_update_epsilon"]
 

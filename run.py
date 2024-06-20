@@ -1,19 +1,28 @@
-
+import os
 import sys
 import time
 import subprocess
-
+from datetime import datetime
 
 if __name__ == "__main__":
     tool = sys.argv[1]
     time_limit = "4"
 
+    # tool = "mucorest"
+    experiment_result_folder = "experiments/"
+    start_time = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+    result_folder = None
     base_cov_port = 11000
     services = ["features-service", "languagetool", "ncs", "restcountries", "scs", "genome-nexus", "person-controller", "user-management", "market", "project-tracking-system"]
 
     for i in range(10):
-        if  i==6 :
-            cov_port = base_cov_port + i*10
+        if i == 6:
+            experiment_result_folder = experiment_result_folder + services[i]
+            result_folder = experiment_result_folder + "/" + start_time
+            os.makedirs(result_folder, exist_ok=True)
+            subprocess.run("cp parameters.json " + result_folder + "/parameters.json", shell=True)
+
+            cov_port = base_cov_port + i * 10
             print("Running " + tool + " for " + services[i] + ": " + str(cov_port))
             session = tool + '_' + services[i]
             cov_session = services[i] + "_cov"
@@ -22,6 +31,15 @@ if __name__ == "__main__":
 
     time.sleep(300)
     time.sleep(int(time_limit) * 60 * 60)
+    for i in range(10):
+        if i == 6:
+            experiment_result_folder = experiment_result_folder + services[i]
+            result_folder = experiment_result_folder + "/" + start_time
+
+            subprocess.run(
+                "python collect_result.py "+result_folder, shell=True
+            )
+
 
     print("Stop running services...")
     subprocess.run("sudo docker stop `sudo docker ps -a -q`", shell=True)

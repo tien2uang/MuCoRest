@@ -6,9 +6,8 @@ from datetime import datetime
 
 if __name__ == "__main__":
     tool = sys.argv[1]
-    time_limit = "4"
-
     # tool = "mucorest"
+    time_limit = "1"
     experiment_result_folder = "experiments/"
     start_time = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
     result_folder = None
@@ -30,7 +29,7 @@ if __name__ == "__main__":
             subprocess.run("tmux new -d -s " + session + " 'timeout " + time_limit + "h python3 run_tool.py " + tool + ' ' + services[i] + ' ' + str(cov_port) + "'", shell=True)
 
     time.sleep(300)
-    time.sleep(int(time_limit) * 60 * 60)
+    time.sleep(int(time_limit) * 60 * 3)
     for i in range(10):
         if i == 6:
             experiment_result_folder = experiment_result_folder + services[i]
@@ -39,6 +38,9 @@ if __name__ == "__main__":
             subprocess.run(
                 "python collect_result.py "+result_folder, shell=True
             )
+
+
+
 
 
     print("Stop running services...")

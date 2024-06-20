@@ -39,7 +39,7 @@ export PATH=$JAVA_HOME/bin:$PATH
 
 cd ./service/jdk8_2/person-controller && mvn clean install -DskipTests && mvn dependency:build-classpath -Dmdep.outputFile=cp.txt
 
-sudo docker pull genomenexus/gn-mongo
+#sudo docker pull genomenexus/gn-mongo
 sudo docker pull mongo
 sudo docker pull mysql
 

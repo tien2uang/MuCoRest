@@ -985,7 +985,7 @@ def main():
 
 
 if __name__ == "__main__":
-    base_url = "http://localhost:30111"
+    # base_url = "http://localhost:30111"
     request_index=0
     base_url = sys.argv[2]
 

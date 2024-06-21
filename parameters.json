@@ -1,22 +1,22 @@
 {
-  "previous_stack_trace_list_size": 1,
-  "previous_api_call_list_size": 1,
   "epsilon": 0.5,
   "max_request_update_epsilon": 100,
-  "R_uniq": 1,
-  "new_status_code_coefficient": 1.5,
+
+  "previous_stack_trace_list_size": 1,
+  "previous_api_call_list_size": 1,
   "R_fg": 3,
+  "R_uniq": 1,
   "R_failure": 1,
-  "out_of_spec_coefficient": 1.5,
   "R_success": 0.5,
   "R_bug": 3,
+
+  "request_threshold": 100,
+  "new_status_code_coefficient": 1.5,
+  "out_of_spec_coefficient": 1.5,
   "bug_not_found_coefficient": 2,
   "execute_hour": 4,
-  "request_threshold": 100,
 
   "code_coverage": true,
   "output_coverage": true,
   "bug_discoverability": true
-
-
 }

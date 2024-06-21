@@ -6,8 +6,8 @@ import os
 def run_service(service_path, class_name):
     with open(service_path + "/cp.txt", 'r') as f:
         cp = f.read()
-    # with open(service_path + "/run.sh", 'w') as f:
-    #     f.write("java -D jdk.attach.allowAttachSelf=true " + cov + " -cp target/classes:target/test-classes:" + cp + ' ' + class_name)
+    with open(service_path + "/run.sh", 'w') as f:
+        f.write("java -D jdk.attach.allowAttachSelf=true " + cov + " -cp target/classes:target/test-classes:" + cp + ' ' + class_name)
     if name == "market" or name == "project-tracking-system":
         #java11
 
@@ -21,15 +21,19 @@ def run_service(service_path, class_name):
         subprocess.run(
             " cd " + service_path + " && tmux new-session -d -s " + name + " 'sudo sh run.sh'",
             shell=True)
-
+# import os
+# base = os.getcwd()
+# cov1 = '-javaagent:' + base +'/org.jacoco.agent-0.8.7-runtime.jar=includes=*,output=tcpserver,port="'
+# cov2 = '",address=*,dumponexit=true -Dfile.encoding=UTF-8'
+# cov = cov1 + str(11060) + cov2
+# print("java" + cov +  "-jar ./service/jdk8_2/person-controller/target/java-spring-boot-mongodb-starter-1.0.0.jar")
 
 
 if __name__ == "__main__":
     name = sys.argv[1]
     cov_port = sys.argv[2]
 
-    base = os.getcwd()
-
+    base=os.getcwd()
     try:
         evo = sys.argv[3]
 

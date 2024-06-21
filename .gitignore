@@ -32,3 +32,5 @@ experiments/*/*.txt
 experiments/*/*.csv
 morest/
 service/
+**/__pycache__
+experiments/**/*.txt

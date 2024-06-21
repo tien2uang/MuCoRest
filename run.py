@@ -7,8 +7,8 @@ import csv
 from datetime import datetime
 
 if __name__ == "__main__":
-    # tool = sys.argv[1]
-    tool = "mucorest"
+    tool = sys.argv[1]
+    # tool = "mucorest"
     experiment_result_folder = "experiments/"
     start_time = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
     result_folder = None

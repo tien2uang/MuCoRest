@@ -4,8 +4,8 @@
 
   "previous_stack_trace_list_size": 1,
   "previous_api_call_list_size": 1,
-  "R_fg": 3,
-  "R_uniq": 1,
+  "R_fg": 1,
+  "R_uniq": 5,
   "R_failure": 1,
   "R_success": 0.5,
   "R_bug": 3,
@@ -14,7 +14,7 @@
   "new_status_code_coefficient": 1.5,
   "out_of_spec_coefficient": 1.5,
   "bug_not_found_coefficient": 2,
-  "execute_hour": 4,
+  "execute_hour": 1,
 
   "code_coverage": true,
   "output_coverage": true,

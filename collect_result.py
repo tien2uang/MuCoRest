@@ -197,10 +197,10 @@ def count_unique_500_errors(log_data,result_folder):
 
     os.makedirs(result_folder, exist_ok=True)
     # Define the file path
-    file_path = os.path.join(result_folder, '/bug_to_request.csv')
+    # file_path = os.path.join(result_folder, '/bug_to_request.csv')
 
     with open(
-            file_path, 'w', newline='') as csvfile:
+            result_folder+'/bug_to_request.csv', 'w', newline='') as csvfile:
         csv_writer = csv.writer(csvfile)
         csv_writer.writerow(["Request", "MuCoRest"])
         for log_item in log_data:

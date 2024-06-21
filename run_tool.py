@@ -2,7 +2,7 @@ import os
 import sys
 import time
 import subprocess
-
+import json
 
 def whitebox(port):
     timeout = time.time() + 60 * 60 * int(time_limit)
@@ -54,7 +54,11 @@ if __name__ == "__main__":
     tool = sys.argv[1]
     service = sys.argv[2]
     port = sys.argv[3]
-    time_limit = "3"
+    with open("parameters.json", 'r') as file:
+        parameter_dic = json.load(file)
+
+    time_limit = str(parameter_dic["execute_hour"])
+
 
     curdir = os.getcwd()
 

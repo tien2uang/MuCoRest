@@ -412,94 +412,94 @@ def initialize_q_learning(operations, parameters_frequency):
 
 
 def update_q_table(q_table, alpha, gamma, selected_operation, selected_parameters, response, recently_api_call,
-                   recently_stack_trace_list,request_index):
+                   recently_stack_trace_list, request_index, code_cov_threshold):
     operation_id = selected_operation['operation_id']
     #
     bug_objective_reward = 0
     code_coverage_reward = 0
     output_coverage_reward = 0
     request_stt_code_category = 0
-    # round 1
-    if response is None:
-        bug_objective_reward = -10
-        request_stt_code_category = 1
-        q_value[operation_id][ss[0]] = q_value[operation_id][ss[0]] - 10
-    elif response.status_code == 401 or response.status_code == 403:
-        request_stt_code_category = 2
-        bug_objective_reward = -10
-        q_value[operation_id][ss[0]] = q_value[operation_id][ss[0]] - 10
-    elif response.status_code >= 500:
-        request_stt_code_category = 3
+    if bug_discoverability == True:
+        if response is None:
+            bug_objective_reward = -10
+            request_stt_code_category = 1
+            q_value[operation_id][ss[0]] = q_value[operation_id][ss[0]] - 10
+        elif response.status_code == 401 or response.status_code == 403:
+            request_stt_code_category = 2
+            bug_objective_reward = -10
+            q_value[operation_id][ss[0]] = q_value[operation_id][ss[0]] - 10
+        elif response.status_code >= 500:
+            request_stt_code_category = 3
 
-        stack_trace = extract_stack_trace(response.text)
-        if stack_trace not in stack_trace_set:
-            d = bug_not_found_coefficient
-            bug_objective_reward = R_bug * d
-            stack_trace_set.add(stack_trace)
+            stack_trace = extract_stack_trace(response.text)
+            if stack_trace not in stack_trace_set:
+                d = bug_not_found_coefficient
+                bug_objective_reward = R_bug * d
+                stack_trace_set.add(stack_trace)
 
-        else:
-            n = recently_stack_trace_list[operation_id].count_exact_stack_trace_matches(stack_trace)
-            bug_objective_reward = R_bug * (1 - 2 * n / previous_stack_trace_list_size)
-        q_value[operation_id][ss[0]] = q_value[operation_id][ss[0]] + bug_objective_reward
-
-        recently_stack_trace_list[operation_id].append(stack_trace)
-
-    else:
-        is_stt_code_out_of_spec = status_code_conformance(selected_operation, response)
-        if is_stt_code_out_of_spec is not None:
-
-            if response.status_code >= 400:
-
-                request_stt_code_category = 4
-                if is_stt_code_out_of_spec:
-                    bug_objective_reward = R_failure * out_of_spec_coefficient
-
-                else:
-                    bug_objective_reward = R_failure
-                q_value[operation_id][ss[0]] = q_value[operation_id][ss[0]] + bug_objective_reward
             else:
+                n = recently_stack_trace_list[operation_id].count_exact_stack_trace_matches(stack_trace)
+                bug_objective_reward = R_bug * (1 - 2 * n / previous_stack_trace_list_size)
+            q_value[operation_id][ss[0]] = q_value[operation_id][ss[0]] + bug_objective_reward
 
-                request_stt_code_category = 5
-                if is_stt_code_out_of_spec:
-                    bug_objective_reward = R_success * out_of_spec_coefficient
+            recently_stack_trace_list[operation_id].append(stack_trace)
 
-                else:
-                    bug_objective_reward = R_success
-                    q_value[operation_id][ss[0]] = q_value[operation_id][ss[0]] + bug_objective_reward
-
-    api_call = APICall(selected_operation, response)
-    if operation_id not in operation_status_code_dict:
-        operation_status_code_dict[operation_id] = set()
-    if response.status_code not in operation_status_code_dict[operation_id]:
-        output_coverage_reward = R_uniq * new_status_code_coefficient
-        operation_status_code_dict[operation_id].add(response.status_code)
-
-
-    else:
-        try:
-
-            n = recently_api_call[operation_id].count_similar_api_call(api_call)
-
-            output_coverage_reward = R_uniq * (1 - 2 * n / previous_api_call_list_size)
-            q_value[operation_id][ss[0]] = q_value[operation_id][ss[0]] + output_coverage_reward
-
-
-
-
-
-
-        except json.JSONDecodeError as e:
-
-            print("\nInvalid JSON response:", e)
-    recently_api_call[operation_id].append(api_call)
-
-    # line_cov = calculateCoverage()
-    if doesCoverageIncrease():
-        if request_index > 1000:
-
-            code_coverage_reward = R_fg * 2
         else:
-            code_coverage_reward = R_fg
+            is_stt_code_out_of_spec = status_code_conformance(selected_operation, response)
+            if is_stt_code_out_of_spec is not None:
+
+                if response.status_code >= 400:
+
+                    request_stt_code_category = 4
+                    if is_stt_code_out_of_spec:
+                        bug_objective_reward = R_failure * out_of_spec_coefficient
+
+                    else:
+                        bug_objective_reward = R_failure
+                    q_value[operation_id][ss[0]] = q_value[operation_id][ss[0]] + bug_objective_reward
+                else:
+
+                    request_stt_code_category = 5
+                    if is_stt_code_out_of_spec:
+                        bug_objective_reward = R_success * out_of_spec_coefficient
+
+                    else:
+                        bug_objective_reward = R_success
+                        q_value[operation_id][ss[0]] = q_value[operation_id][ss[0]] + bug_objective_reward
+    if output_coverage == True:
+        api_call = APICall(selected_operation, response)
+        if operation_id not in operation_status_code_dict:
+            operation_status_code_dict[operation_id] = set()
+        if response.status_code not in operation_status_code_dict[operation_id]:
+            output_coverage_reward = R_uniq * new_status_code_coefficient
+            operation_status_code_dict[operation_id].add(response.status_code)
+
+
+        else:
+            try:
+
+                n = recently_api_call[operation_id].count_similar_api_call(api_call)
+
+                output_coverage_reward = R_uniq * (1 - 2 * n / previous_api_call_list_size)
+                q_value[operation_id][ss[0]] = q_value[operation_id][ss[0]] + output_coverage_reward
+
+            except json.JSONDecodeError as e:
+
+                print("\nInvalid JSON response:", e)
+        recently_api_call[operation_id].append(api_call)
+    if code_coverage == True:
+
+        does_code_cov_increase, current_line_cov, code_cov_increase = calculateCoverageIncrease()
+        if request_index > request_threshold:
+            if code_cov_threshold == 0:
+                code_cov_threshold = current_line_cov / request_index
+            if code_cov_increase > code_cov_threshold:
+                code_coverage_reward = R_fg * 2
+            else:
+                code_coverage_reward = R_fg
+        else:
+            code_coverage_reward = R_fg / 2
+
     reward = code_coverage_reward + bug_objective_reward + output_coverage_reward
 
     # line_cov_list.append(line_cov)
@@ -873,7 +873,7 @@ def init_recent_lists(operations):
     return api_call_dict, stack_trace_dict
 
 
-def doesCoverageIncrease() -> bool:
+def calculateCoverageIncrease():
     does_increase = False
     print("COV port :" + str(cov_port))
     exec_file = "jacoco_" + str(cov_port) + "_1.exec"
@@ -907,10 +907,12 @@ def doesCoverageIncrease() -> bool:
         "line_coverage": covered_line / total_line * 100,
         "method_coverage": covered_method / total_method * 100
     }
+    line_coverage_increment = 0
     if coverage["branch_coverage"] > current_coverage["branch_coverage"]:
         does_increase = True
     if coverage["line_coverage"] > current_coverage["line_coverage"]:
         does_increase = True
+        line_coverage_increment = coverage["line_coverage"] - current_coverage["line_coverage"]
     if coverage["method_coverage"] > current_coverage["method_coverage"]:
         does_increase = True
     current_coverage["branch_coverage"] = coverage["branch_coverage"]
@@ -919,7 +921,7 @@ def doesCoverageIncrease() -> bool:
     subprocess.run("rm -f " + csv_file, shell=True)
     subprocess.run("rm -f " + exec_file, shell=True)
 
-    return does_increase
+    return does_increase, line_coverage_increment, current_coverage["line_coverage"]
 
 
 def main():
@@ -971,7 +973,7 @@ def main():
                 pass
         update_q_table(q_table, alpha, gamma, selected_operation, selected_parameters, response,
                        recently_api_call=recently_api_call, recently_stack_trace_list=recently_stack_trace_list,
-                       request_index=request_index)
+                       request_index=request_index,code_cov_threshold=code_cov_threshold)
         if response.status_code < 300:
             copied_operation = copy.deepcopy(selected_operation)
             copied_parameters = copy.deepcopy(selected_parameters)
@@ -986,9 +988,9 @@ def main():
 
 if __name__ == "__main__":
     # base_url = "http://localhost:30111"
-    request_index=0
+    request_index = 0
     base_url = sys.argv[2]
-
+    code_cov_threshold = 0
     try:
 
         cov_port = sys.argv[3]
@@ -1027,6 +1029,11 @@ if __name__ == "__main__":
 
     R_bug = parameter_dic["R_bug"]
     bug_not_found_coefficient = parameter_dic["bug_not_found_coefficient"]
+
+    request_threshold = parameter_dic["request_threshold"]
+    code_coverage = parameter_dic["code_coverage"]
+    output_coverage = parameter_dic["output_coverage"]
+    bug_discoverability = parameter_dic["bug_discoverability"]
 
     EPSILON = [0.1]
     ss = [None]

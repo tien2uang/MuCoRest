@@ -132,7 +132,7 @@ if __name__ == "__main__":
         elif name == "person-controller":
             subprocess.run("sudo docker run -d -p 27019:27017 --name mongodb-person-controller mongo:latest", shell=True)
             time.sleep(30)
-            subprocess.run("tmux new -d -s person-controller '. java8.env && java " + cov + " -jar ./service/jdk8_2/person-controller/target/java-spring-boot-mongodb-starter-1.0.0.jar'", shell=True)
+            subprocess.run("tmux new -d -s person-controller ' java " + cov + " -jar ./service/jdk8_2/person-controller/target/java-spring-boot-mongodb-starter-1.0.0.jar'", shell=True)
             subprocess.run(
                 "tmux new -d -s person_proxy 'mitmproxy --mode reverse:http://0.0.0.0:50111 -p 30111 -s proxy/person.py'",
                 shell=True)

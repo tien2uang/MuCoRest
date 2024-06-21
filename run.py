@@ -2,24 +2,33 @@ import os
 import sys
 import time
 import subprocess
+import json
+import csv
 from datetime import datetime
 
 if __name__ == "__main__":
-    tool = sys.argv[1]
-    # tool = "mucorest"
-    time_limit = "4"
+    # tool = sys.argv[1]
+    tool = "mucorest"
     experiment_result_folder = "experiments/"
     start_time = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
     result_folder = None
     base_cov_port = 11000
     services = ["features-service", "languagetool", "ncs", "restcountries", "scs", "genome-nexus", "person-controller", "user-management", "market", "project-tracking-system"]
+    with open("parameters.json", 'r') as file:
+        parameter_dic = json.load(file)
 
+    time_limit = str(parameter_dic["execute_hour"])
     for i in range(10):
         if i == 6:
             experiment_result_folder = experiment_result_folder + services[i]
             result_folder = experiment_result_folder + "/" + start_time
             os.makedirs(result_folder, exist_ok=True)
             subprocess.run("cp parameters.json " + result_folder + "/parameters.json", shell=True)
+
+            with open(
+                    result_folder + '/bug_to_request.csv', 'w', newline='') as csvfile:
+                csv_writer = csv.writer(csvfile)
+                csv_writer.writerow(["Request", "MuCoRest"])
 
             cov_port = base_cov_port + i * 10
             print("Running " + tool + " for " + services[i] + ": " + str(cov_port))

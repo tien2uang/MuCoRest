@@ -20,8 +20,7 @@ if __name__ == "__main__":
     time_limit = str(parameter_dic["execute_hour"])
     for i in range(10):
         if i == 6:
-            experiment_result_folder = experiment_result_folder + services[i]
-            result_folder = experiment_result_folder + "/" + start_time
+            result_folder = experiment_result_folder+ services[i] + "/" + start_time
             os.makedirs(result_folder, exist_ok=True)
             subprocess.run("cp parameters.json " + result_folder + "/parameters.json", shell=True)
 
@@ -41,8 +40,7 @@ if __name__ == "__main__":
     time.sleep(int(time_limit) * 60 * 60)
     for i in range(10):
         if i == 6:
-            experiment_result_folder = experiment_result_folder + services[i]
-            result_folder = experiment_result_folder + "/" + start_time
+            result_folder = experiment_result_folder + services[i] + "/" + start_time
 
             subprocess.run(
                 "python collect_result.py "+result_folder, shell=True

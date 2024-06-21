@@ -28,6 +28,7 @@ faultloadResultsFile.xlsx
 org.jacoco.*
 jacoco_*
 *LOG_PATH*
-results/experiment
+experiments/*/*.txt
+experiments/*/*.csv
 morest/
 service/

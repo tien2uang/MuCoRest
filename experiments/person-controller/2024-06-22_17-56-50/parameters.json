@@ -3,12 +3,12 @@
   "max_request_update_epsilon": 100,
 
   "previous_stack_trace_list_size": 10,
-  "previous_api_call_list_size": 10,
-  "R_fg": 5,
+  "previous_api_call_list_size": 1,
+  "R_fg": 3,
   "R_uniq": 1,
   "R_failure": 1,
   "R_success": 0.5,
-  "R_bug": 3,
+  "R_bug": 5,
 
   "request_threshold": 100,
   "new_status_code_coefficient": 1.5,

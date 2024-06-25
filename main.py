@@ -889,6 +889,7 @@ def calculateCoverageIncrease():
     covered_method = 0
 
     csv_file = "_" + str(cov_port) + "_1.csv"
+    cc_csv_file = "code_coverage_"+service+".csv"
     with open(csv_file) as f:
         lines = f.readlines()
         for line in lines:
@@ -918,6 +919,7 @@ def calculateCoverageIncrease():
     current_coverage["branch_coverage"] = coverage["branch_coverage"]
     current_coverage["line_coverage"] = coverage["line_coverage"]
     current_coverage["method_coverage"] = coverage["method_coverage"]
+    subprocess.run("cp "+ csv_file+" "+ cc_csv_file,shell=True)
     subprocess.run("rm -f " + csv_file, shell=True)
     subprocess.run("rm -f " + exec_file, shell=True)
 

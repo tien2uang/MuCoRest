@@ -292,7 +292,7 @@ if __name__ == '__main__':
     # count_coverage("service/jdk11/market", "_11080_1")
     # count_coverage("service/jdk11/project-tracking-system", "_11090_1")
     for log_file in logs:
-        if log_file == ("person.txt"):
+        if log_file == ("person.txt") or log_file=="languagetool.txt":
 
             # log_file=result_folder + "/" + log_file
 
@@ -306,6 +306,10 @@ if __name__ == '__main__':
             print(f'\nTotal unique number of 500 errors: {unique_500_count}')
             result[0] = result[0] + str(unique_500_count) + '\n'
             subprocess.run("mv "+log_file+ " "  + result_folder + "/"+log_file, shell=True)
+            if log_file == "person.txt":
+                subprocess.run("mv  jacoco_11060_1.exec "  + result_folder + "/jacoco_11060_1.exec" , shell=True)
+            elif log_file == "languagetool.txt":
+                subprocess.run("mv  jacoco_11010_1.exec " + result_folder + "/jacoco_11010_1.exec", shell=True)
     # person1_log_data = parse_log_file("results/person/1/person.txt")
     # person2_log_data = parse_log_file("results/person/2/person.txt")
     # person3_log_data = parse_log_file("results/person/3/person.txt")

@@ -7,8 +7,8 @@
   "R_fg": 5,
   "R_uniq": 1,
   "R_failure": 1,
-  "R_success": 0.5,
-  "R_bug": 3,
+  "R_success": 2,
+  "R_bug": 6,
 
   "request_threshold": 100,
   "new_status_code_coefficient": 1.5,

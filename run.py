@@ -19,7 +19,7 @@ if __name__ == "__main__":
 
     time_limit = str(parameter_dic["execute_hour"])
     for i in range(10):
-        if i == 6:
+        if i == 6 or i ==1:
             result_folder = experiment_result_folder+ services[i] + "/" + start_time
             os.makedirs(result_folder, exist_ok=True)
             subprocess.run("cp parameters.json " + result_folder + "/parameters.json", shell=True)
@@ -39,7 +39,7 @@ if __name__ == "__main__":
     time.sleep(300)
     time.sleep(int(time_limit) * 60 * 60)
     for i in range(10):
-        if i == 6:
+        if i == 6 or i ==1:
             result_folder = experiment_result_folder + services[i] + "/" + start_time
 
             subprocess.run(
@@ -55,7 +55,7 @@ if __name__ == "__main__":
     time.sleep(30)
     subprocess.run("sudo docker rm `sudo docker ps -a -q`", shell=True)
     for i in range(10):
-        if  i==6 :
+        if i == 6 or i ==1:
             subprocess.run("tmux kill-sess -t " + services[i], shell=True)
             subprocess.run("tmux kill-sess -t " + services[i] + "_cov", shell=True)
             subprocess.run("tmux kill-sess -t " + tool + '_' + services[i], shell=True)

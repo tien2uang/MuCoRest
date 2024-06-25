@@ -292,7 +292,7 @@ if __name__ == '__main__':
     # count_coverage("service/jdk11/market", "_11080_1")
     # count_coverage("service/jdk11/project-tracking-system", "_11090_1")
     for log_file in logs:
-        if log_file == ("person.txt"):
+        if log_file == ("person.txt") or log_file == "languagetool.txt":
 
             # log_file=result_folder + "/" + log_file
 

@@ -37,6 +37,7 @@ python run.py mucorest
 After run above command, use this command to enter the testing session:
 ```
 tmux attach-session -t mucorest_person-controller
+tmux attach-session -t languagetool
 ```
 Make sure that having 4 session running, using this command to check:
 ```

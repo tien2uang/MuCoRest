@@ -69,10 +69,10 @@ def get_list_of_HTML_report(file_path):
         return matches
 
     start_time = time.time()
-    file_paths=[]
+    file_paths = []
     # file_paths = find_files(file_path, ".java.html")
 
-    target_sub_dirs=[]
+    target_sub_dirs = []
     subdirs = [x[0] for x in os.walk(file_path)]
 
     for subdir in subdirs:
@@ -271,7 +271,8 @@ def convert_err_stacktrace_to_dict(stacktrace):
 
 
 if __name__ == '__main__':
-    result_folder=sys.argv[1]
+    result_folder = sys.argv[1]
+    service = sys.argv[2]
     print(result_folder)
     logs = ["features.txt", "languagetool.txt", "ncs.txt", "restcountries.txt", "scs.txt", "genome.txt", "person.txt",
             "user.txt", "market.txt", "project.txt"]
@@ -280,82 +281,43 @@ if __name__ == '__main__':
     result = [""]
     full_stack_traces = {}
     errors = {}
-    # get_line_cov_analysis("service/jdk8_2/person-controller/")
-    # count_coverage("service/jdk8_1/cs/rest/original/features-service", "_11000_1")
-    # count_coverage("service/jdk8_1/cs/rest/original/languagetool/", "_11010_1")
-    # count_coverage("service/jdk8_1/cs/rest/artificial/ncs/", "_11020_1")
-    # count_coverage("service/jdk8_1/cs/rest/original/restcountries/", "_11030_1")
-    # count_coverage("service/jdk8_1/cs/rest/artificial/scs/", "_11040_1")
-    # count_coverage("service/jdk8_2/genome-nexus/", "_11050_1")
-    # count_coverage("service/jdk8_2/person-controller/", "_11060_1")
-    # count_coverage("service/jdk8_2/user-management", "_11070_1")
-    # count_coverage("service/jdk11/market", "_11080_1")
-    # count_coverage("service/jdk11/project-tracking-system", "_11090_1")
-    for log_file in logs:
-        if log_file == ("person.txt") or log_file=="languagetool.txt":
+    code_coverage_csv_file = "code_coverage_" + service + ".csv"
+    log_file = service + ".txt"
+    errors[log_file] = []
 
-            # log_file=result_folder + "/" + log_file
+    log_data = parse_log_file(log_file)
+    unique_stack_traces = count_unique_500_errors(log_data, result_folder)
+    unique_500_count = 0
+    for stack_trace, count in unique_stack_traces.items():
+        errors[log_file].append(full_stack_traces[stack_trace])
+        unique_500_count += 1
+    print(f'\nTotal unique number of 500 errors: {unique_500_count}')
+    result[0] = result[0] + str(unique_500_count) + '\n'
+    subprocess.run("mv " + log_file + " " + result_folder + "/" + log_file, shell=True)
 
-            errors[log_file] = []
-            log_data = parse_log_file(log_file)
-            unique_stack_traces = count_unique_500_errors(log_data,result_folder)
-            unique_500_count = 0
-            for stack_trace, count in unique_stack_traces.items():
-                errors[log_file].append(full_stack_traces[stack_trace])
-                unique_500_count += 1
-            print(f'\nTotal unique number of 500 errors: {unique_500_count}')
-            result[0] = result[0] + str(unique_500_count) + '\n'
-            subprocess.run("mv "+log_file+ " "  + result_folder + "/"+log_file, shell=True)
-            if log_file == "person.txt":
-                subprocess.run("mv  jacoco_11060_1.exec "  + result_folder + "/jacoco_11060_1.exec" , shell=True)
-            elif log_file == "languagetool.txt":
-                subprocess.run("mv  jacoco_11010_1.exec " + result_folder + "/jacoco_11010_1.exec", shell=True)
-    # person1_log_data = parse_log_file("results/person/1/person.txt")
-    # person2_log_data = parse_log_file("results/person/2/person.txt")
-    # person3_log_data = parse_log_file("results/person/3/person.txt")
-    # person4_log_data= parse_log_file("person.txt")
-    # person1_unique_stack_traces = count_unique_5xx_errors(person1_log_data)
-    # person2_unique_stack_traces = count_unique_5xx_errors(person2_log_data)
-    # person3_unique_stack_traces = count_unique_5xx_errors(person3_log_data)
-    # person4_unique_stack_traces = count_unique_5xx_errors(person4_log_data)
-    # result_1_4 = get_missing_items(person1_unique_stack_traces, person4_unique_stack_traces)
-    # result_4_1 = get_missing_items(person4_unique_stack_traces, person1_unique_stack_traces)
-    # print(1)
-    #
-    # result_1_3 = get_missing_items(person1_unique_stack_traces, person3_unique_stack_traces)
-    #
-    # result_2_3= get_missing_items(person2_unique_stack_traces,person3_unique_stack_traces)
-    # result_3_2 = get_missing_items(person3_unique_stack_traces, person2_unique_stack_traces)
-    # print(result_2_3)
-    # print(result_3_2)
-    # Find items in either counter
-    # either_items = set(  person1_unique_stack_traces.keys())|set(  person2_unique_stack_traces.keys()) | set(person3_unique_stack_traces.keys())
-    #
-    # # Print the items
-    # print(f"Items in either counter_a or counter_b: {either_items}")
+    total_branch = 0
+    covered_branch = 0
+    total_line = 0
+    covered_line = 0
+    total_method = 0
+    covered_method = 0
+    with open(code_coverage_csv_file) as f:
+        lines = f.readlines()
+        for line in lines:
+            items = line.split(",")
+            if '_COVERED' not in items[6] and '_MISSED' not in items[6]:
+                covered_branch = covered_branch + int(items[6])
+                total_branch = total_branch + int(items[6]) + int(items[5])
+                covered_line = covered_line + int(items[8])
+                total_line = total_line + int(items[8]) + int(items[7])
+                covered_method = covered_method + int(items[12])
+                total_method = total_method + int(items[12]) + int(items[11])
 
-    # for i in range(10):
-    #     if i==6:
-    #         total_branch = 0
-    #         covered_branch = 0
-    #         total_line = 0
-    #         covered_line = 0
-    #         total_method = 0
-    #         covered_method = 0
-    #         with open(csvs[i]) as f:
-    #             lines = f.readlines()
-    #             for line in lines:
-    #                 items = line.split(",")
-    #                 if '_COVERED' not in items[6] and '_MISSED' not in items[6]:
-    #                     covered_branch = covered_branch + int(items[6])
-    #                     total_branch = total_branch + int(items[6]) + int(items[5])
-    #                     covered_line = covered_line + int(items[8])
-    #                     total_line = total_line + int(items[8]) + int(items[7])
-    #                     covered_method = covered_method + int(items[12])
-    #                     total_method = total_method + int(items[12]) + int(items[11])
-    #         print(covered_branch/total_branch*100, covered_line/total_line*100, covered_method/total_method*100)
-    #         result[0] = result[0] + str(covered_method/total_method*100) + ',' + str(covered_branch/total_branch*100) + ',' + str(covered_line/total_line*100) + '\n'
-
+    print("Code coverage: ", covered_branch / total_branch * 100, covered_line / total_line * 100,
+          covered_method / total_method * 100)
+    result[0] = result[0] + str(covered_method / total_method * 100) + ',' + str(
+        covered_branch / total_branch * 100) + ',' + str(covered_line / total_line * 100) + '\n'
+    subprocess.run("mv " + code_coverage_csv_file + " " + result_folder + "/" + code_coverage_csv_file, shell=True)
     # with open("res.csv", "w") as f:
     #     f.write(result[0])
     #
@@ -388,7 +350,7 @@ if __name__ == '__main__':
     except FileNotFoundError:
         print(f"Error: File not found. Please check the filename and try again.")
         exit()
-    number_of_ARAT_RL = (df['ARAT-RL'].dropna().to_list()[:20000])
+    number_of_ARAT_RL = (df[service].dropna().to_list()[:20000])
     plt.plot(request, number_of_ARAT_RL, label='ARAT-RL')
 
     # Set the Y axis to increments of 10, 20, 30, etc.
@@ -396,7 +358,7 @@ if __name__ == '__main__':
     # plt.xticks(np.arange(0, 20000, 4000))
     # Label the axes
     plt.xlabel('Number of Requests')
-    plt.ylabel('Number of Bugs Found')
+    plt.ylabel('Number of Bugs Found in ' + service)
 
     # Show the legend
     plt.legend()

@@ -45,7 +45,7 @@ if __name__ == "__main__":
             result_folder = experiment_result_folder + services[i] + "/" + start_time
 
             subprocess.run(
-                "python collect_result.py "+result_folder, shell=True
+                "python collect_result.py "+result_folder +" "+ services[i], shell=True
             )
 
 

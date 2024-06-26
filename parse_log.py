@@ -323,27 +323,27 @@ if __name__ == '__main__':
     # # Print the items
     # print(f"Items in either counter_a or counter_b: {either_items}")
 
-    # for i in range(10):
-    #     if i==6:
-    #         total_branch = 0
-    #         covered_branch = 0
-    #         total_line = 0
-    #         covered_line = 0
-    #         total_method = 0
-    #         covered_method = 0
-    #         with open(csvs[i]) as f:
-    #             lines = f.readlines()
-    #             for line in lines:
-    #                 items = line.split(",")
-    #                 if '_COVERED' not in items[6] and '_MISSED' not in items[6]:
-    #                     covered_branch = covered_branch + int(items[6])
-    #                     total_branch = total_branch + int(items[6]) + int(items[5])
-    #                     covered_line = covered_line + int(items[8])
-    #                     total_line = total_line + int(items[8]) + int(items[7])
-    #                     covered_method = covered_method + int(items[12])
-    #                     total_method = total_method + int(items[12]) + int(items[11])
-    #         print(covered_branch/total_branch*100, covered_line/total_line*100, covered_method/total_method*100)
-    #         result[0] = result[0] + str(covered_method/total_method*100) + ',' + str(covered_branch/total_branch*100) + ',' + str(covered_line/total_line*100) + '\n'
+    for i in range(10):
+        if i==6:
+            total_branch = 0
+            covered_branch = 0
+            total_line = 0
+            covered_line = 0
+            total_method = 0
+            covered_method = 0
+            with open("code_coverage_languagetool.csv") as f:
+                lines = f.readlines()
+                for line in lines:
+                    items = line.split(",")
+                    if '_COVERED' not in items[6] and '_MISSED' not in items[6]:
+                        covered_branch = covered_branch + int(items[6])
+                        total_branch = total_branch + int(items[6]) + int(items[5])
+                        covered_line = covered_line + int(items[8])
+                        total_line = total_line + int(items[8]) + int(items[7])
+                        covered_method = covered_method + int(items[12])
+                        total_method = total_method + int(items[12]) + int(items[11])
+            print(covered_branch/total_branch*100, covered_line/total_line*100, covered_method/total_method*100)
+            result[0] = result[0] + str(covered_method/total_method*100) + ',' + str(covered_branch/total_branch*100) + ',' + str(covered_line/total_line*100) + '\n'
 
     # with open("res.csv", "w") as f:
     #     f.write(result[0])

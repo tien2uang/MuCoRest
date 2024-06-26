@@ -1,6 +1,11 @@
 import json
 import numbers
 import requests
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
+
+
 
 def is_response_content_similar(api_call_1, api_call_2) -> bool:
 
@@ -101,19 +106,35 @@ def is_response_content_similar(api_call_1, api_call_2) -> bool:
             if response1.status_code != response2.status_code:
                 is_equal = False
                 return is_equal
-            def count_words(text):
 
-                # Split the string into words using the split() method
-                words = text.split()
+            def compare_strings_tfidf_cosine(str1, str2):
+                documents = [str1, str2]
+                tfidf_vectorizer = TfidfVectorizer()
+                tfidf_matrix = tfidf_vectorizer.fit_transform(documents)
 
-                # Count the number of words
-                word_count = len(words)
+                cosine_sim = cosine_similarity(tfidf_matrix[0:1], tfidf_matrix[1:2])
+                return cosine_sim[0][0]
 
-                return word_count
-            if isinstance(response1.json(),str):
-                return True if count_words(response1.json()) == count_words(response2.json()) else False
-            elif isinstance(response1.json(),numbers.Number):
-                return True if type(response1.json()) == type(response2.json()) else False
+            def is_number(s):
+
+                try:
+                    float(s)
+                    return True
+                except ValueError:
+                    return False
+
+            try:
+                if is_number(response1.text):
+                    return True
+                else:
+                    return True if compare_strings_tfidf_cosine(response1.text,response2.text)>0.6 else False
+
+            except requests.exceptions.JSONDecodeError as e:
+                print("Invalid JSON response:", e)
+                with open('response_fail.txt', 'w') as f:
+                    f.write(response1.text+"\n")
+                    f.write(response2.text+"\n")
+
         else:
             return True
     return is_equal

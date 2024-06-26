@@ -32,3 +32,6 @@ experiments/*/*.txt
 experiments/*/*.csv
 morest/
 service/
+*.txt
+*.csv
+*.exec

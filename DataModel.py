@@ -107,33 +107,19 @@ def is_response_content_similar(api_call_1, api_call_2) -> bool:
                 is_equal = False
                 return is_equal
 
-            def compare_strings_tfidf_cosine(str1, str2):
-                documents = [str1, str2]
-                tfidf_vectorizer = TfidfVectorizer()
-                tfidf_matrix = tfidf_vectorizer.fit_transform(documents)
+            def count_words(text):
 
-                cosine_sim = cosine_similarity(tfidf_matrix[0:1], tfidf_matrix[1:2])
-                return cosine_sim[0][0]
+                # Split the string into words using the split() method
+                words = text.split()
 
-            def is_number(s):
+                # Count the number of words
+                word_count = len(words)
 
-                try:
-                    float(s)
-                    return True
-                except ValueError:
-                    return False
+                return word_count
 
-            try:
-                if is_number(response1.text):
-                    return True
-                else:
-                    return True if compare_strings_tfidf_cosine(response1.text,response2.text)>0.6 else False
+            if isinstance(response1.text, str):
+                return True if count_words(response1.text) == count_words(response2.text) else False
 
-            except requests.exceptions.JSONDecodeError as e:
-                print("Invalid JSON response:", e)
-                with open('response_fail.txt', 'w') as f:
-                    f.write(response1.text+"\n")
-                    f.write(response2.text+"\n")
 
         else:
             return True

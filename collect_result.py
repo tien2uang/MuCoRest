@@ -274,10 +274,6 @@ if __name__ == '__main__':
     result_folder = sys.argv[1]
     service = sys.argv[2]
     print(result_folder)
-    logs = ["features.txt", "languagetool.txt", "ncs.txt", "restcountries.txt", "scs.txt", "genome.txt", "person.txt",
-            "user.txt", "market.txt", "project.txt"]
-    csvs = ["_11000_1.csv", "_11010_1.csv", "_11020_1.csv", "_11030_1.csv", "_11040_1.csv", "_11050_1.csv",
-            "_11060_1.csv", "_11070_1.csv", "_11080_1.csv", "_11090_1.csv"]
     result = [""]
     full_stack_traces = {}
     errors = {}

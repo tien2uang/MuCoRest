@@ -70,7 +70,7 @@ tmux kill-server
 At the end of testing process, result will be saved at `experiment/{service_name}/{testing_start_time}`
 
 Contains 5 files:
-+ jacoco_10060_1.exec
++ code_coverage_{service_name}.csv
 + bug_to_request.csv
 + graph.png
 + parameters.json

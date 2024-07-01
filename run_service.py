@@ -6,21 +6,14 @@ import os
 def run_service(service_path, class_name):
     with open(service_path + "/cp.txt", 'r') as f:
         cp = f.read()
-    # with open(service_path + "/run.sh", 'w') as f:
-    #     f.write("java -D jdk.attach.allowAttachSelf=true " + cov + " -cp target/classes:target/test-classes:" + cp + ' ' + class_name)
+    with open(service_path + "/run.sh", 'w') as f:
+        f.write("java -Djdk.attach.allowAttachSelf=true " + cov + " -cp target/classes:target/test-classes:" + cp + ' ' + class_name)
     if name == "market" or name == "project-tracking-system":
-        #java11
-
-        # subprocess.run(". ./java11.env && cd " + service_path + " && tmux new-session -d -s " + name + " 'sudo sh run.sh'", shell=True)
-        subprocess.run(
-            " cd " + service_path + " && tmux new-session -d -s " + name + " 'sudo sh run.sh'",
-            shell=True)
+        subprocess.run(". ./java11.env && cd " + service_path + " && tmux new-session -d -s " + name + " 'sudo sh run.sh'", shell=True)
     else:
-        #java8
-        # subprocess.run(". ./java8.env && cd " + service_path + " && tmux new-session -d -s " + name + " 'sudo sh run.sh'", shell=True)
-        subprocess.run(
-            " cd " + service_path + " && tmux new-session -d -s " + name + " 'sudo sh run.sh'",
-            shell=True)
+        subprocess.run(""
+                       # ". ./java8.env && "
+                       "cd " + service_path + " && tmux new-session -d -s " + name + " 'sudo sh run.sh'", shell=True)
 
 
 

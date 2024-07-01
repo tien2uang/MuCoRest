@@ -8,13 +8,13 @@ class Counter:
         self.status_500 = 0
 
     def request(self, flow):
-        with open("user.txt", "a") as f:
+        with open("user-management.txt", "a") as f:
             f.write("========REQUEST========\n")
             f.write(flow.request.method + "\n")
             f.write(flow.request.pretty_url + "\n")
             f.write(flow.request.text + "\n")
     def response(self, flow):
-        with open("user.txt", "a") as f:
+        with open("user-management.txt", "a") as f:
             f.write("========RESPONSE========\n")
             f.write(str(time.time()) + "\n")
             f.write(str(flow.response.status_code) + "\n")

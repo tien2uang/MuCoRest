@@ -880,7 +880,7 @@ def calculateCoverageIncrease():
     subprocess.run("java -jar org.jacoco.cli-0.8.7-nodeps.jar dump --address localhost --port " + str(
         cov_port) + " --destfile " + exec_file, shell=True)
 
-    count_coverage("service/jdk8_2/person-controller/", "_" + str(cov_port) + "_1")
+    count_coverage(project_path, "_" + str(cov_port) + "_1")
     total_branch = 0
     covered_branch = 0
     total_line = 0
@@ -889,6 +889,7 @@ def calculateCoverageIncrease():
     covered_method = 0
 
     csv_file = "_" + str(cov_port) + "_1.csv"
+    cc_csv_file = "code_coverage_" + service + ".csv"
     with open(csv_file) as f:
         lines = f.readlines()
         for line in lines:
@@ -900,7 +901,7 @@ def calculateCoverageIncrease():
                 total_line = total_line + int(items[8]) + int(items[7])
                 covered_method = covered_method + int(items[12])
                 total_method = total_method + int(items[12]) + int(items[11])
-    # print(covered_branch / total_branch * 100, covered_line / total_line * 100, covered_method / total_method * 100)
+    print(covered_branch / total_branch * 100, covered_line / total_line * 100, covered_method / total_method * 100)
 
     coverage = {
         "branch_coverage": covered_branch / total_branch * 100,
@@ -918,8 +919,9 @@ def calculateCoverageIncrease():
     current_coverage["branch_coverage"] = coverage["branch_coverage"]
     current_coverage["line_coverage"] = coverage["line_coverage"]
     current_coverage["method_coverage"] = coverage["method_coverage"]
+    subprocess.run("cp " + csv_file + " " + cc_csv_file, shell=True)
     subprocess.run("rm -f " + csv_file, shell=True)
-    subprocess.run("rm -f " + exec_file, shell=True)
+    # subprocess.run("rm -f " + exec_file, shell=True)
 
     return does_increase, line_coverage_increment, current_coverage["line_coverage"]
 
@@ -973,7 +975,7 @@ def main():
                 pass
         update_q_table(q_table, alpha, gamma, selected_operation, selected_parameters, response,
                        recently_api_call=recently_api_call, recently_stack_trace_list=recently_stack_trace_list,
-                       request_index=request_index,code_cov_threshold=code_cov_threshold)
+                       request_index=request_index, code_cov_threshold=code_cov_threshold)
         if response.status_code < 300:
             copied_operation = copy.deepcopy(selected_operation)
             copied_parameters = copy.deepcopy(selected_parameters)

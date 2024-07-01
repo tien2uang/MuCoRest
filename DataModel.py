@@ -1,6 +1,11 @@
 import json
 import numbers
 import requests
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
+
+
 
 def is_response_content_similar(api_call_1, api_call_2) -> bool:
 
@@ -101,6 +106,7 @@ def is_response_content_similar(api_call_1, api_call_2) -> bool:
             if response1.status_code != response2.status_code:
                 is_equal = False
                 return is_equal
+
             def count_words(text):
 
                 # Split the string into words using the split() method
@@ -110,10 +116,11 @@ def is_response_content_similar(api_call_1, api_call_2) -> bool:
                 word_count = len(words)
 
                 return word_count
-            if isinstance(response1.json(),str):
-                return True if count_words(response1.json()) == count_words(response2.json()) else False
-            elif isinstance(response1.json(),numbers.Number):
-                return True if type(response1.json()) == type(response2.json()) else False
+
+            if isinstance(response1.text, str):
+                return True if count_words(response1.text) == count_words(response2.text) else False
+
+
         else:
             return True
     return is_equal

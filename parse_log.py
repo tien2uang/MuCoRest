@@ -299,29 +299,7 @@ if __name__ == '__main__':
                 unique_5xx_count += 1
             print(f'\nTotal unique number of 5xx errors: {unique_5xx_count}')
             result[0] = result[0] + str(unique_5xx_count) + '\n'
-    # person1_log_data = parse_log_file("results/person/1/person.txt")
-    # person2_log_data = parse_log_file("results/person/2/person.txt")
-    # person3_log_data = parse_log_file("results/person/3/person.txt")
-    # person4_log_data= parse_log_file("person.txt")
-    # person1_unique_stack_traces = count_unique_5xx_errors(person1_log_data)
-    # person2_unique_stack_traces = count_unique_5xx_errors(person2_log_data)
-    # person3_unique_stack_traces = count_unique_5xx_errors(person3_log_data)
-    # person4_unique_stack_traces = count_unique_5xx_errors(person4_log_data)
-    # result_1_4 = get_missing_items(person1_unique_stack_traces, person4_unique_stack_traces)
-    # result_4_1 = get_missing_items(person4_unique_stack_traces, person1_unique_stack_traces)
-    # print(1)
-    #
-    # result_1_3 = get_missing_items(person1_unique_stack_traces, person3_unique_stack_traces)
-    #
-    # result_2_3= get_missing_items(person2_unique_stack_traces,person3_unique_stack_traces)
-    # result_3_2 = get_missing_items(person3_unique_stack_traces, person2_unique_stack_traces)
-    # print(result_2_3)
-    # print(result_3_2)
-    # Find items in either counter
-    # either_items = set(  person1_unique_stack_traces.keys())|set(  person2_unique_stack_traces.keys()) | set(person3_unique_stack_traces.keys())
-    #
-    # # Print the items
-    # print(f"Items in either counter_a or counter_b: {either_items}")
+
 
     for i in range(10):
         if i==6:
@@ -345,18 +323,7 @@ if __name__ == '__main__':
             print(covered_branch/total_branch*100, covered_line/total_line*100, covered_method/total_method*100)
             result[0] = result[0] + str(covered_method/total_method*100) + ',' + str(covered_branch/total_branch*100) + ',' + str(covered_line/total_line*100) + '\n'
 
-    # with open("res.csv", "w") as f:
-    #     f.write(result[0])
-    #
-    # json_errors = {}
-    # for log_file in errors:
-    #     if log_file == 'person.txt':
-    #         log_file_errors = errors[log_file]
-    #         json_errors[log_file] = []
-    #         for error in log_file_errors:
-    #             json_errors[log_file].append(convert_err_stacktrace_to_dict(error))
-    # with open('errors.json', 'w') as f:
-    #     json.dump(json_errors, f)
+
 
 
     plt.figure(figsize=(8, 6))

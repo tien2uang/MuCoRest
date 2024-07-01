@@ -276,16 +276,16 @@ if __name__ == '__main__':
     print(result_folder)
     result = [""]
     full_stack_traces = {}
-    errors = {}
+
     code_coverage_csv_file = "code_coverage_" + service + ".csv"
     log_file = service + ".txt"
-    errors[log_file] = []
+    errors = []
 
     log_data = parse_log_file(log_file)
     unique_stack_traces = count_unique_500_errors(log_data, result_folder)
     unique_500_count = 0
     for stack_trace, count in unique_stack_traces.items():
-        errors[log_file].append(full_stack_traces[stack_trace])
+        errors.append(stack_trace)
         unique_500_count += 1
     print(f'\nTotal unique number of 500 errors: {unique_500_count}')
     result[0] = result[0] + str(unique_500_count) + '\n'
@@ -297,35 +297,27 @@ if __name__ == '__main__':
     covered_line = 0
     total_method = 0
     covered_method = 0
-    with open(code_coverage_csv_file) as f:
-        lines = f.readlines()
-        for line in lines:
-            items = line.split(",")
-            if '_COVERED' not in items[6] and '_MISSED' not in items[6]:
-                covered_branch = covered_branch + int(items[6])
-                total_branch = total_branch + int(items[6]) + int(items[5])
-                covered_line = covered_line + int(items[8])
-                total_line = total_line + int(items[8]) + int(items[7])
-                covered_method = covered_method + int(items[12])
-                total_method = total_method + int(items[12]) + int(items[11])
+    if (os.path.exists(code_coverage_csv_file)):
+        with open(code_coverage_csv_file) as f:
+            lines = f.readlines()
+            for line in lines:
+                items = line.split(",")
+                if '_COVERED' not in items[6] and '_MISSED' not in items[6]:
+                    covered_branch = covered_branch + int(items[6])
+                    total_branch = total_branch + int(items[6]) + int(items[5])
+                    covered_line = covered_line + int(items[8])
+                    total_line = total_line + int(items[8]) + int(items[7])
+                    covered_method = covered_method + int(items[12])
+                    total_method = total_method + int(items[12]) + int(items[11])
 
-    print("Code coverage: ", covered_branch / total_branch * 100, covered_line / total_line * 100,
-          covered_method / total_method * 100)
-    result[0] = result[0] + str(covered_method / total_method * 100) + ',' + str(
-        covered_branch / total_branch * 100) + ',' + str(covered_line / total_line * 100) + '\n'
-    subprocess.run("mv " + code_coverage_csv_file + " " + result_folder + "/" + code_coverage_csv_file, shell=True)
-    # with open("res.csv", "w") as f:
-    #     f.write(result[0])
-    #
-    # json_errors = {}
-    # for log_file in errors:
-    #     if log_file == 'person.txt':
-    #         log_file_errors = errors[log_file]
-    #         json_errors[log_file] = []
-    #         for error in log_file_errors:
-    #             json_errors[log_file].append(convert_err_stacktrace_to_dict(error))
-    # with open('errors.json', 'w') as f:
-    #     json.dump(json_errors, f)
+        print("Code coverage: ", covered_branch / total_branch * 100, covered_line / total_line * 100,
+              covered_method / total_method * 100)
+        result[0] = result[0] + str(covered_method / total_method * 100) + ',' + str(
+            covered_branch / total_branch * 100) + ',' + str(covered_line / total_line * 100) + '\n'
+        subprocess.run("mv " + code_coverage_csv_file + " " + result_folder + "/" + code_coverage_csv_file, shell=True)
+
+    with open(result_folder+'/errors.json', 'w') as f:
+        json.dump(errors, f)
 
 
     plt.figure(figsize=(8, 6))

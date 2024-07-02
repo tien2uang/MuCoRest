@@ -5,10 +5,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 
-
-
 def is_response_content_similar(api_call_1, api_call_2) -> bool:
-
     from deepdiff import DeepDiff
 
     def deep_diff(dict1, dict2):
@@ -44,18 +41,11 @@ def is_response_content_similar(api_call_1, api_call_2) -> bool:
         """
         d = HtmlDiff()
 
-        html_diff=d.html_diff(text1.splitlines(1), text2.splitlines(1))
+        html_diff = d.html_diff(text1.splitlines(1), text2.splitlines(1))
         if "line_added" in html_diff or "line_removed" in html_diff:
             return False
         else:
             return True
-
-
-
-
-
-
-
 
     is_equal = True
 
@@ -86,7 +76,6 @@ def is_response_content_similar(api_call_1, api_call_2) -> bool:
                         return is_equal
                     else:
 
-
                         if isinstance(response1.json(), dict) or isinstance(response1.json(), list):
 
                             # if get_depth(response1.json()) != get_depth(response2.json()):
@@ -97,8 +86,8 @@ def is_response_content_similar(api_call_1, api_call_2) -> bool:
             except requests.exceptions.JSONDecodeError as e:
                 print("Invalid JSON response:", e)
                 with open('response_fail.txt', 'w') as f:
-                    f.write(response1.text+"\n")
-                    f.write(response2.text+"\n")
+                    f.write(response1.text + "\n")
+                    f.write(response2.text + "\n")
         elif api_call_1.response_type == ReponseType.OTHER_RESPONSE_TYPE:
 
             response1 = api_call_1.response
@@ -126,9 +115,6 @@ def is_response_content_similar(api_call_1, api_call_2) -> bool:
     return is_equal
 
 
-
-
-
 class ReponseType:
     HTML_RESPONSE_TYPE = 1
     JSON_RESPONSE_TYPE = 2
@@ -143,14 +129,13 @@ class APICall:
         self.response = response
         if (len(response.text) == 0):
             self.response_type = ReponseType.NO_CONTENT_RESPONSE_TYPE
-        elif (response.text[0] == '<' ):
+        elif (response.text[0] == '<'):
             self.response_type = ReponseType.HTML_RESPONSE_TYPE
-        elif (response.text[0] == '[' and response.text[-1] == ']') or (response.text[0] == '{' and response.text[-1] == '}') :
+        elif (response.text[0] == '[' and response.text[-1] == ']') or (
+                response.text[0] == '{' and response.text[-1] == '}'):
             self.response_type = ReponseType.JSON_RESPONSE_TYPE
         else:
             self.response_type = ReponseType.OTHER_RESPONSE_TYPE
-
-
 
 
 class FIFOListWithMaxSize:
@@ -180,7 +165,7 @@ class APICallList(FIFOListWithMaxSize):
         super().__init__(max_size)
 
     def count_similar_api_call(self, target_api_call) -> int:
-        if len(self._list)==0:
+        if len(self._list) == 0:
             return 0
         else:
             count = 0
@@ -188,26 +173,40 @@ class APICallList(FIFOListWithMaxSize):
                 if is_response_content_similar(api_call, target_api_call):
                     count += 1
 
-
-
         return count
+
+    def append(self, api_call: APICall):
+        if api_call.response_type == ReponseType.JSON_RESPONSE_TYPE:
+            try:
+                data = api_call.response.json()
+                super().append(api_call)
+                print("Success add to ", api_call.operation['operation_id'], api_call.response.status_code)
+            except requests.exceptions.JSONDecodeError as e:
+                print("Invalid JSON response:", e)
+                print("Cannot append to API List ", api_call.operation['operation_id'], api_call.response.status_code)
+                with open('response_fail.txt', 'a') as f:
+                    f.write(api_call.response.text + "\n")
+                print("-----------------------------------")
+
+    def get_all(self):
+        return self._list
+
 
 class LineCoverageList(FIFOListWithMaxSize):
     def __init__(self, max_size=5):
         super().__init__(max_size)
 
-    def calculate_relative_coverage(self,coverage)-> float:
+    def calculate_relative_coverage(self, coverage) -> float:
 
-        if self.__len__()==1:
-            return (coverage-self._list[0])/0.05
+        if self.__len__() == 1:
+            return (coverage - self._list[0]) / 0.05
         else:
 
-            average_jump_distance= (self._list[-1]-self._list[0])/(self.__len__()-1)
-            if average_jump_distance==0:
-                return (coverage-self._list[-1])/0.05
+            average_jump_distance = (self._list[-1] - self._list[0]) / (self.__len__() - 1)
+            if average_jump_distance == 0:
+                return (coverage - self._list[-1]) / 0.05
             else:
-                return (coverage-self._list[-1])/average_jump_distance
-
+                return (coverage - self._list[-1]) / average_jump_distance
 
 
 class StackTraceList(FIFOListWithMaxSize):

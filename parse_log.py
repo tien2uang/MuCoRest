@@ -266,7 +266,7 @@ def convert_err_stacktrace_to_dict(stacktrace):
 if __name__ == '__main__':
 
 
-    logs = ["features.txt", "languagetool.txt", "ncs.txt", "restcountries.txt", "scs.txt", "genome.txt", "person.txt",
+    logs = ["features.txt", "languagetool.txt", "ncs.txt", "restcountries.txt", "scs.txt", "genome.txt", "person-controller.txt",
             "user.txt", "market.txt", "project.txt"]
     csvs = ["_11000_1.csv", "_11010_1.csv", "_11020_1.csv", "_11030_1.csv", "_11040_1.csv", "_11050_1.csv",
             "_11060_1.csv", "_11070_1.csv", "_11080_1.csv", "_11090_1.csv"]
@@ -285,7 +285,7 @@ if __name__ == '__main__':
     # count_coverage("service/jdk11/market", "_11080_1")
     # count_coverage("service/jdk11/project-tracking-system", "_11090_1")
     for log_file in logs:
-        if log_file == ("person.txt"):
+        if log_file == ("person-controller.txt"):
 
             print(log_file)
 
@@ -301,27 +301,27 @@ if __name__ == '__main__':
             result[0] = result[0] + str(unique_5xx_count) + '\n'
 
 
-    for i in range(10):
-        if i==6:
-            total_branch = 0
-            covered_branch = 0
-            total_line = 0
-            covered_line = 0
-            total_method = 0
-            covered_method = 0
-            with open("code_coverage_languagetool.csv") as f:
-                lines = f.readlines()
-                for line in lines:
-                    items = line.split(",")
-                    if '_COVERED' not in items[6] and '_MISSED' not in items[6]:
-                        covered_branch = covered_branch + int(items[6])
-                        total_branch = total_branch + int(items[6]) + int(items[5])
-                        covered_line = covered_line + int(items[8])
-                        total_line = total_line + int(items[8]) + int(items[7])
-                        covered_method = covered_method + int(items[12])
-                        total_method = total_method + int(items[12]) + int(items[11])
-            print(covered_branch/total_branch*100, covered_line/total_line*100, covered_method/total_method*100)
-            result[0] = result[0] + str(covered_method/total_method*100) + ',' + str(covered_branch/total_branch*100) + ',' + str(covered_line/total_line*100) + '\n'
+    # for i in range(10):
+    #     if i==6:
+    #         total_branch = 0
+    #         covered_branch = 0
+    #         total_line = 0
+    #         covered_line = 0
+    #         total_method = 0
+    #         covered_method = 0
+    #         with open("code_coverage_languagetool.csv") as f:
+    #             lines = f.readlines()
+    #             for line in lines:
+    #                 items = line.split(",")
+    #                 if '_COVERED' not in items[6] and '_MISSED' not in items[6]:
+    #                     covered_branch = covered_branch + int(items[6])
+    #                     total_branch = total_branch + int(items[6]) + int(items[5])
+    #                     covered_line = covered_line + int(items[8])
+    #                     total_line = total_line + int(items[8]) + int(items[7])
+    #                     covered_method = covered_method + int(items[12])
+    #                     total_method = total_method + int(items[12]) + int(items[11])
+    #         print(covered_branch/total_branch*100, covered_line/total_line*100, covered_method/total_method*100)
+    #         result[0] = result[0] + str(covered_method/total_method*100) + ',' + str(covered_branch/total_branch*100) + ',' + str(covered_line/total_line*100) + '\n'
 
 
 
@@ -344,7 +344,7 @@ if __name__ == '__main__':
     except FileNotFoundError:
         print(f"Error: File not found. Please check the filename and try again.")
         exit()
-    number_of_ARAT_RL = (df['ARAT-RL'].dropna().to_list()[:20000])
+    number_of_ARAT_RL = (df['person-controller'].dropna().to_list()[:20000])
     plt.plot(request, number_of_ARAT_RL, label='ARAT-RL')
 
     # Set the Y axis to increments of 10, 20, 30, etc.

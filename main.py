@@ -473,20 +473,24 @@ def update_q_table(q_table, alpha, gamma, selected_operation, selected_parameter
         if response.status_code not in operation_status_code_dict[operation_id]:
             output_coverage_reward = R_uniq * new_status_code_coefficient
             operation_status_code_dict[operation_id].add(response.status_code)
+            recently_api_call[operation_id][str(response.status_code)] = APICallList(previous_api_call_list_size)
 
 
         else:
             try:
 
-                n = recently_api_call[operation_id].count_similar_api_call(api_call)
-
+                n = recently_api_call[operation_id][str(response.status_code)].count_similar_api_call(api_call)
+                print("Similar: ",n)
+                print("Operation: ",operation_id, "Status: ",response.status_code)
+                print("List size: ", len(recently_api_call[operation_id][str(response.status_code)].get_all()))
                 output_coverage_reward = R_uniq * (1 - 2 * n / previous_api_call_list_size)
                 q_value[operation_id][ss[0]] = q_value[operation_id][ss[0]] + output_coverage_reward
 
             except json.JSONDecodeError as e:
 
                 print("\nInvalid JSON response:", e)
-        recently_api_call[operation_id].append(api_call)
+        print("Try to add to Operation: ",operation_id, "Status: ",response.status_code)
+        recently_api_call[operation_id][str(response.status_code)].append(api_call)
     if code_coverage == True:
 
         does_code_cov_increase, current_line_cov, code_cov_increase = calculateCoverageIncrease()
@@ -866,7 +870,7 @@ def init_recent_lists(operations):
     stack_trace_dict = {}
     for operation in operations:
         operation_id = operation["operation_id"]
-        api_call_dict[operation_id] = APICallList(previous_api_call_list_size)  # mai thu thay bang 3
+        api_call_dict[operation_id] = {}  # mai thu thay bang 3
     for operation in operations:
         operation_id = operation["operation_id"]
         stack_trace_dict[operation_id] = StackTraceList(previous_stack_trace_list_size)
